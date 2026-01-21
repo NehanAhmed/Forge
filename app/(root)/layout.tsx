@@ -4,8 +4,10 @@ import React from 'react'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <>
-            <DarkVeil
+        <div className="relative w-full min-h-screen">
+            {/* Background effect - positioned absolutely to cover entire viewport */}
+            <div className="fixed inset-0 z-0">
+               <DarkVeil
                 hueShift={-115}
                 noiseIntensity={0}
                 scanlineIntensity={0}
@@ -14,12 +16,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 warpAmount={0}
                 resolutionScale={1}
             />
-            <main className='relative'>
-
+            </div>
+            
+            {/* Header - fixed at top */}
             <Header />
-            {children}
-            </main>
-        </>
+            
+            {/* Main content - with padding to account for fixed header */}
+            <div className="relative z-10 pt-24">
+                {children}
+            </div>
+        </div>
     )
 }
 
