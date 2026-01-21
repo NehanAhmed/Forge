@@ -17,7 +17,7 @@ const Header = () => {
         <nav className="
     w-full px-16 py-6 
     flex items-center justify-center gap-4
-    fixed top-0 z-100
+    z-100
     backdrop-blur-lg 
     font-hanken-grotesk
   ">
