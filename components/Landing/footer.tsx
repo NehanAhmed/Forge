@@ -86,16 +86,16 @@ const Footer = () => {
       
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
-      <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 opacity-[0.03] rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 opacity-[0.03] -full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 py-16">
         
         {/* Top Section: CTA */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}font-
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8 p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm"
+          className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8 p-8  border border-border/50 bg-card/50 backdrop-blur-sm"
         >
           <div className="space-y-2 text-center md:text-left">
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
@@ -136,10 +136,10 @@ const Footer = () => {
             </p>
             
             {/* Animated Status / Humor */}
-            <div className="flex items-center gap-2 text-xs font-mono text-primary/80 bg-primary/5 w-fit px-3 py-1 rounded-full border border-primary/10">
+            <div className="flex items-center gap-2 text-xs font-mono text-primary/80 bg-primary/5 w-fit px-3 py-1 -full border border-primary/10">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full -full bg-primary opacity-75"></span>
+                <span className="relative inline-flex -full h-2 w-2 bg-primary"></span>
               </span>
               <AnimatePresence mode="wait">
                 <motion.span
@@ -209,7 +209,7 @@ const Footer = () => {
           
           <div className="flex items-center gap-6">
             <Link href="/status" className="hover:text-foreground transition-colors flex items-center gap-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+              <span className="h-1.5 w-1.5 -full bg-green-500"></span>
               All Systems Nominal
             </Link>
           </div>
@@ -225,7 +225,7 @@ const SocialButton = ({ icon, href }: { icon: React.ReactNode, href: string }) =
     href={href} 
     target="_blank" 
     rel="noopener noreferrer"
-    className="h-9 w-9 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:-translate-y-1"
+    className="h-9 w-9 flex items-center justify-center -md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-all duration-200 hover:-translate-y-1"
   >
     {icon}
   </a>

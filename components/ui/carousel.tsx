@@ -147,7 +147,7 @@ export default function ModernCarousel({
 
                 {/* Author Info */}
                 <motion.div variants={textVariants} className="flex items-center gap-3 py-2">
-                  <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center border border-border">
+                  <div className="h-10 w-10 -full bg-secondary flex items-center justify-center border border-border">
                     <IconUser className="w-5 h-5 text-secondary-foreground" />
                   </div>
                   <div className="flex flex-col">
@@ -188,7 +188,7 @@ export default function ModernCarousel({
                 setDirection(idx > current ? 1 : -1);
                 setCurrent(idx);
               }}
-              className={`h-1.5 rounded-full transition-all duration-300 ${current === idx
+              className={`h-1.5 -full transition-all duration-300 ${current === idx
                   ? "w-8 bg-primary"
                   : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
                 }`}

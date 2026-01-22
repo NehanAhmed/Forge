@@ -8,15 +8,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <div className="relative w-full min-h-screen">
             {/* Background effect - positioned absolutely to cover entire viewport */}
             <div className="absolute  inset-0 z-0 h-1/4">
-               <DarkVeil
+               {/* <DarkVeil
                 hueShift={-115}
                 noiseIntensity={0}
-                scanlineIntensity={0}
+                scanlineIntensity={0}   
                 speed={0.5}
                 scanlineFrequency={0}
                 warpAmount={0}
                 resolutionScale={1}
-            />
+            /> */}
             </div>
             
             {/* Header - fixed at top */}

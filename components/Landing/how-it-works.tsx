@@ -1,10 +1,10 @@
-import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 import { IconClock, IconCodeCircle2, IconCodeCircle2Filled, IconDatabase, IconFileCheck, IconGitFork, IconShare2, IconShield, IconSparkles, IconSparkles2 } from "@tabler/icons-react";
 
 export function HowItWorks() {
     const data = [
         {
+            id: 1,
             title: "Step 1: Describe",
             content: (
                 <div>
@@ -18,7 +18,7 @@ export function HowItWorks() {
                     {/* Feature highlights */}
                     <div className="mb-8 space-y-3">
                         <div className="flex items-start gap-3">
-                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10">
+                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center -md bg-primary/10">
                                 <IconCodeCircle2 className="h-3.5 w-3.5 text-primary" />
                             </div>
                             <div>
@@ -32,7 +32,7 @@ export function HowItWorks() {
                         </div>
 
                         <div className="flex items-start gap-3">
-                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-secondary/10">
+                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center -md bg-secondary/10">
                                 <IconClock className="h-3.5 w-3.5 text-secondary" />
                             </div>
                             <div>
@@ -47,23 +47,24 @@ export function HowItWorks() {
                     </div>
 
                     {/* Mock form preview */}
-                    <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
+                    <div className="-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
                         <div className="mb-3 space-y-2">
-                            <div className="h-2 w-32 rounded bg-neutral-300 dark:bg-neutral-700"></div>
-                            <div className="h-8 rounded-md border border-neutral-300 bg-white dark:border-white/10 dark:bg-background"></div>
+                            <div className="h-2 w-32  bg-neutral-300 dark:bg-neutral-700"></div>
+                            <div className="h-8 -md border border-neutral-300 bg-white dark:border-white/10 dark:bg-background"></div>
                         </div>
                         <div className="space-y-2">
-                            <div className="h-2 w-40 rounded bg-neutral-300 dark:bg-neutral-700"></div>
-                            <div className="h-20 rounded-md border border-neutral-300 bg-white dark:border-white/10 dark:bg-background"></div>
+                            <div className="h-2 w-40  bg-neutral-300 dark:bg-neutral-700"></div>
+                            <div className="h-20 -md border border-neutral-300 bg-white dark:border-white/10 dark:bg-background"></div>
                         </div>
                     </div>
                 </div>
             ),
         },
         {
+            id: 2,
             title: "Step 2: AI Analysis",
             content: (
-                <div>
+                <div key={'1'}>
                     <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
                         Our AI analyzes your requirements and generates a comprehensive project plan in seconds.
                     </p>
@@ -74,25 +75,25 @@ export function HowItWorks() {
                     {/* Processing steps */}
                     <div className="mb-8 space-y-3">
                         <div className="flex items-center gap-3 text-xs text-neutral-700 md:text-sm dark:text-neutral-300">
-                            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <div className="flex h-5 w-5 shrink-0 items-center justify-center -full bg-primary/20 text-primary">
                                 <IconSparkles2 className="h-3 w-3" />
                             </div>
                             Analyzing project requirements
                         </div>
                         <div className="flex items-center gap-3 text-xs text-neutral-700 md:text-sm dark:text-neutral-300">
-                            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <div className="flex h-5 w-5 shrink-0 items-center justify-center -full bg-primary/20 text-primary">
                                 <IconDatabase className="h-3 w-3" />
                             </div>
                             Generating database schema
                         </div>
                         <div className="flex items-center gap-3 text-xs text-neutral-700 md:text-sm dark:text-neutral-300">
-                            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <div className="flex h-5 w-5 shrink-0 items-center justify-center -full bg-primary/20 text-primary">
                                 <IconShield className="h-3 w-3" />
                             </div>
                             Identifying potential risks
                         </div>
                         <div className="flex items-center gap-3 text-xs text-neutral-700 md:text-sm dark:text-neutral-300">
-                            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary/20 text-secondary">
+                            <div className="flex h-5 w-5 shrink-0 items-center justify-center -full bg-secondary/20 text-secondary">
                                 <IconFileCheck className="h-3 w-3" />
                             </div>
                             Creating development roadmap
@@ -100,7 +101,7 @@ export function HowItWorks() {
                     </div>
 
                     {/* Tech stack preview */}
-                    <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
+                    <div className="-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
                         <div className="mb-3 text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                             Recommended Tech Stack
                         </div>
@@ -108,7 +109,7 @@ export function HowItWorks() {
                             {['Next.js', 'PostgreSQL', 'Prisma', 'Tailwind', 'Docker', 'Vercel'].map((tech) => (
                                 <span
                                     key={tech}
-                                    className="rounded-md border border-primary/20 bg-primary/5 px-2 py-1 text-xs font-medium text-primary"
+                                    className="-md border border-primary/20 bg-primary/5 px-2 py-1 text-xs font-medium text-primary"
                                 >
                                     {tech}
                                 </span>
@@ -119,16 +120,17 @@ export function HowItWorks() {
             ),
         },
         {
+            id: 3,
             title: "Step 3: Review & Customize",
             content: (
-                <div>
+                <div key={'2'}>
                     <p className="mb-8 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
                         Review your complete project plan with tech stack recommendations, database schema, risk analysis, and development timeline. Everything is organized in a clean, developer-focused interface.
                     </p>
 
                     {/* Plan sections */}
                     <div className="mb-8 grid grid-cols-2 gap-3">
-                        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
+                        <div className="-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
                             <div className="mb-2 flex items-center gap-2">
                                 <IconDatabase className="h-4 w-4 text-primary" />
                                 <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
@@ -140,7 +142,7 @@ export function HowItWorks() {
                             </p>
                         </div>
 
-                        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
+                        <div className="-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
                             <div className="mb-2 flex items-center gap-2">
                                 <IconShield className="h-4 w-4 text-destructive" />
                                 <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
@@ -152,7 +154,7 @@ export function HowItWorks() {
                             </p>
                         </div>
 
-                        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
+                        <div className="-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
                             <div className="mb-2 flex items-center gap-2">
                                 <IconClock className="h-4 w-4 text-secondary" />
                                 <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
@@ -164,7 +166,7 @@ export function HowItWorks() {
                             </p>
                         </div>
 
-                        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
+                        <div className="-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-white/10 dark:bg-card">
                             <div className="mb-2 flex items-center gap-2">
                                 <IconCodeCircle2Filled className="h-4 w-4 text-primary" />
                                 <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
@@ -179,10 +181,10 @@ export function HowItWorks() {
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-2">
-                        <button className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white transition-all hover:bg-primary/90">
+                        <button className="-lg bg-primary px-3 py-1.5 text-xs font-medium text-white transition-all hover:bg-primary/90">
                             Edit Plan
                         </button>
-                        <button className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:bg-neutral-50 dark:border-white/10 dark:bg-card dark:text-neutral-200 dark:hover:bg-card/80">
+                        <button className="-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:bg-neutral-50 dark:border-white/10 dark:bg-card dark:text-neutral-200 dark:hover:bg-card/80">
                             Export
                         </button>
                     </div>
@@ -190,9 +192,10 @@ export function HowItWorks() {
             ),
         },
         {
+            id: 4,
             title: "Step 4: Share & Build",
             content: (
-                <div>
+                <div key={'3'}>
                     <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
                         Share your project plan with your team, make it public for others to learn from, or fork existing plans to build on proven architectures.
                     </p>
@@ -203,7 +206,7 @@ export function HowItWorks() {
                     {/* Sharing options */}
                     <div className="mb-8 space-y-3">
                         <div className="flex items-start gap-3">
-                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/10">
+                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center -md bg-primary/10">
                                 <IconShare2 className="h-3.5 w-3.5 text-primary" />
                             </div>
                             <div>
@@ -217,7 +220,7 @@ export function HowItWorks() {
                         </div>
 
                         <div className="flex items-start gap-3">
-                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-secondary/10">
+                            <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center -md bg-secondary/10">
                                 <IconGitFork className="h-3.5 w-3.5 text-secondary" />
                             </div>
                             <div>
@@ -232,11 +235,11 @@ export function HowItWorks() {
                     </div>
 
                     {/* URL preview */}
-                    <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
+                    <div className="-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-white/10 dark:bg-card">
                         <div className="mb-2 text-xs font-medium text-neutral-600 dark:text-neutral-400">
                             Your project is live at:
                         </div>
-                        <div className="flex items-center gap-2 rounded-md bg-white px-3 py-2 font-mono text-xs text-primary dark:bg-background">
+                        <div className="flex items-center gap-2 -md bg-white px-3 py-2 font-mono text-xs text-primary dark:bg-background">
                             <span>forge-rouge-delta.vercel.app/p/ecommerce</span>
                             <button className="ml-auto text-neutral-400 hover:text-primary">
                                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +255,7 @@ export function HowItWorks() {
 
     return (
         <section className="relative w-full overflow-clip py-20 font-hanken-grotesk">
-            
+
 
             {/* Timeline */}
             <Timeline data={data} />

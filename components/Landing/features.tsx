@@ -1,40 +1,52 @@
+'use client'
 import { ForgeFeaturesBento } from "./features-bento";
-
+import { motion } from 'motion/react'
 export function FeaturesSection() {
   return (
     <section className="relative py-24 px-4 overflow-hidden mt-40">
-      
+
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
+          <motion.div initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} className="inline-flex items-center gap-2 px-3 py-1 -full bg-primary/10 border border-primary/20 mb-4">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full -full bg-primary opacity-75"></span>
+              <span className="relative inline-flex -full h-2 w-2 bg-primary"></span>
             </span>
             <span className="text-sm font-medium text-primary">
               AI-Powered Planning
             </span>
-          </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          </motion.div>
+
+          <motion.h2 initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ delay: 0.2 }} className="text-4xl md:text-5xl font-bold mb-4">
             Everything you need to
             <br />
             <span className="bg-gradient-to-r from-primary via-destructive to-secondary bg-clip-text text-transparent">
               ship with confidence
             </span>
-          </h2>
-          
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-hanken-grotesk">
-            Forge combines intelligent analysis with developer-focused tools 
+          </motion.h2>
+
+          <motion.p initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }} transition={{ delay: 0.3 }} className="text-lg text-muted-foreground max-w-2xl mx-auto font-hanken-grotesk">
+            Forge combines intelligent analysis with developer-focused tools
             to transform your project ideas into actionable plans.
-          </p>
+          </motion.p>
         </div>
 
         {/* Bento Grid */}
-        <ForgeFeaturesBento />
-        
-     
+        <motion.div initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{delay:0.4}}>
+
+          <ForgeFeaturesBento />
+        </motion.div>
+
+
       </div>
     </section>
   );
@@ -53,7 +65,7 @@ export function FeaturesSectionMinimal() {
             Plan smarter, ship faster
           </p>
         </div>
-        
+
         <ForgeFeaturesBento />
       </div>
     </section>

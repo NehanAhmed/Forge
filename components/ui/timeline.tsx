@@ -38,34 +38,41 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       ref={containerRef}
     >
       <div className="container mx-auto mb-16 px-4 text-center pt-20">
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1">
+        <motion.div initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} className="mb-4 inline-flex items-center gap-2 -full border border-primary/20 bg-primary/10 px-3 py-1">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+            <span className="absolute inline-flex h-full w-full animate-ping -full bg-primary opacity-75"></span>
+            <span className="relative inline-flex h-2 w-2 -full bg-primary"></span>
           </span>
           <span className="text-sm font-medium text-primary font-hanken-grotesk">
             Simple Process
           </span>
-        </div>
+        </motion.div>
 
-        <h2 className="mb-4 text-4xl font-bold md:text-5xl font-hanken-grotesk ">
+        <motion.h2 initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ delay: 0.3 }} className="mb-4 text-4xl font-bold md:text-5xl font-hanken-grotesk ">
           How Forge Works
-        </h2>
+        </motion.h2>
 
-        <p className="mx-auto max-w-2xl text-lg text-muted-foreground font-hanken-grotesk">
+        <motion.p initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }} transition={{ delay: 0.4 }} className="mx-auto max-w-2xl text-lg text-muted-foreground font-hanken-grotesk">
           From idea to execution in four simple steps. No complex setup, no steep learning curve—just intelligent planning that works.
-        </p>
+        </motion.p>
       </div>
 
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
         {data.map((item, index) => (
           <div
+
             key={index}
             className="flex justify-start pt-10 md:pt-40 md:gap-10"
           >
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
+              <div className="h-10 absolute left-3 md:left-3 w-10 -full bg-white dark:bg-black flex items-center justify-center">
+                <div className="h-4 w-4 -full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
               </div>
               <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-neutral-500 dark:text-neutral-500 ">
                 {item.title}
@@ -91,7 +98,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] rounded-full"
+            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] -full"
           />
         </div>
       </div>
