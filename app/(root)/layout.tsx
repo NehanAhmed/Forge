@@ -23,7 +23,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Header />
             
             {/* Main content - with padding to account for fixed header */}
-            <div className="relative z-10 pt-24">
+            <div className="relative z-10">
                 {children}
             </div>
             <Footer />

@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge'
 import { motion } from 'motion/react'
 const Hero = () => {
     return (
-        <section className='w-full min-h-[70vh] flex flex-col items-start justify-end px-10'>
+        <section className='w-full min-h-[70vh] flex flex-col items-start justify-end px-10 mt-24'>
 
             <div className='flex flex-col gap-5 items-start justify-start'>
                 <motion.div initial={{ opacity: 0, y: 20 }}
