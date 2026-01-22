@@ -1,10 +1,12 @@
 import React from 'react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
-import { IconArrowRight, IconBrandNextjs } from '@tabler/icons-react'
+import { IconArrowRight, IconBrandNextjs, IconEye, IconGitFork } from '@tabler/icons-react'
 import { Badge } from './ui/badge'
+import { Project } from '@/lib/db/schema'
+import Link from 'next/link'
 
-const ProjectCard = () => {
+const ProjectCard = ({ data }: { data: Project }) => {
     return (
         <Card className='w-full max-h-[300px] h-full font-hanken-grotesk'>
             <CardContent className='w-full flex items-center justify-start gap-5'>
@@ -12,18 +14,24 @@ const ProjectCard = () => {
 
                     <div>
                         <div className='flex items-center justify-start gap-6'>
-                            <h1 className='text-2xl md:text-3xl font-bold'>Ecommerce Platform</h1>
+                            <h1 className='text-2xl md:text-3xl font-bold'>{data.title}</h1>
                             <div className='flex items-center justify-center gap-2'>
-                                <Badge  variant={'secondary'}>Good</Badge>
-                                <Badge variant={'secondary'}>Good</Badge>
-                                <Badge variant={'secondary'}>Good</Badge>
+                                <Badge variant={'secondary'}><IconEye />{data.viewCount}</Badge>
+                                <Badge variant={'secondary'}><IconGitFork />{data.forkCount}</Badge>
+
                             </div>
                         </div>
-                        <p className='text-sm text-neutral-400'>This is soemthing i also dont know about nad it is a clena adn modern tagline or ecomm lpatforl cjncdjcndc</p>
+                        <p className='text-sm text-neutral-400'>{data.description}</p>
                     </div>
 
 
                     <div className='flex justify-start items-center '>
+                        {data.techStack?.frontend?.map((val) => (
+                            <Button variant={'outline'}>
+                                <IconBrandNextjs />
+                                {val}
+                            </Button>
+                        ))}
                         <Button variant={'outline'}>
                             <IconBrandNextjs />
                             NextJs
@@ -39,7 +47,9 @@ const ProjectCard = () => {
                     </div>
                 </div>
                 <div>
-                    <Button variant={'link'}>View this Project <IconArrowRight /></Button>
+                    <Link href={`/p/${data.slug}`}>
+                        <Button variant={'link'}>View this Project <IconArrowRight /></Button>
+                    </Link>
                 </div>
             </CardContent>
         </Card>
