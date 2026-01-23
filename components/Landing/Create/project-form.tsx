@@ -136,7 +136,7 @@ export function ProjectForm() {
         // Fallback if slug isn't returned, though ideally it should be
         router.refresh();
       }
-    } catch (error: any) {
+    } catch (error: undefined) {
       console.error("Project creation error:", error);
       toast.error("Failed to create project", {
         description: error instanceof Error ? error.message : "Something went wrong. Please try again.",
@@ -151,7 +151,7 @@ export function ProjectForm() {
 
       <Loader loadingStates={loadingStates} loading={isSubmitting} duration={100} />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 grid md:grid-cols-2 lg:grid-cols-2 grid-cols-1 gap-4">
         {/* Basic Information Section */}
         <div className="space-y-6 rounded-lg border bg-card p-6 shadow-sm">
           <div className="space-y-1">
@@ -326,7 +326,7 @@ export function ProjectForm() {
         </div>
 
         {/* Visibility Section */}
-        <div className="space-y-4 rounded-lg border bg-card p-6 shadow-sm col-span-2">
+        <div className="space-y-4 rounded-lg border bg-card p-6 shadow-sm col-span-1 lg:col-span-2">
           <div className="space-y-1">
             <h2 className="font-hanken-grotesk text-xl font-semibold">
               Visibility

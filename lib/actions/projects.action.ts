@@ -2,7 +2,7 @@
 
 import { db } from "../db";
 import { projects } from "../db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -39,9 +39,10 @@ export async function getAllProjects() {
             .orderBy(desc(projects.createdAt));
 
         return projectsData;
-    } catch (error: any) {
-        console.error("Error fetching projects:", error);
-        throw new Error(`Failed to fetch projects: ${error.message}`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error fetching projects:", errorMessage);
+        throw new Error(`Failed to fetch projects: ${errorMessage}`);
     }
 }
 
@@ -57,16 +58,18 @@ export async function getUserProjects(userId: string) {
             .orderBy(desc(projects.createdAt));
 
         return userProjects;
-    } catch (error: any) {
-        console.error("Error fetching user projects:", error);
-        throw new Error(`Failed to fetch user projects: ${error.message}`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error fetching user projects:", errorMessage);
+        throw new Error(`Failed to fetch user projects: ${errorMessage}`);
     }
 }
 
 /**
  * Retrieves a single project by slug
+ * Returns the project only if it's public OR owned by the requesting user
  */
-export async function getProjectBySlug(slug: string) {
+export async function getProjectBySlug(slug: string, userId?: string | null) {
     try {
         const [project] = await db
             .select()
@@ -74,10 +77,18 @@ export async function getProjectBySlug(slug: string) {
             .where(eq(projects.slug, slug))
             .limit(1);
 
-        return project || null;
-    } catch (error: any) {
-        console.error("Error fetching project by slug:", error);
-        throw new Error(`Failed to fetch project: ${error.message}`);
+        // Check visibility: must be public OR owned by the requesting user
+        if (!project) {
+            return null;
+        }
+
+        const isAccessible = project.isPublic || (userId && project.userId === userId);
+
+        return isAccessible ? project : null;
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error fetching project by slug:", errorMessage);
+        throw new Error(`Failed to fetch project: ${errorMessage}`);
     }
 }
 
@@ -149,32 +160,59 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
         revalidatePath("/dashboard");
 
         return newProject;
-    } catch (error: any) {
-        console.error("Error creating project:", error);
-        throw new Error(error.message || "Failed to create project");
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error creating project:", errorMessage);
+        throw new Error(errorMessage || "Failed to create project");
     }
 }
 /**
  * Updates an existing project
+ * Only the project owner can update their project
  */
 export async function updateProject(
     projectId: string,
     data: Partial<Omit<typeof projects.$inferInsert, 'id' | 'createdAt'>>
 ) {
     try {
+        // Get authenticated user
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session?.session) {
+            throw new Error("Unauthorized: You must be logged in to update a project");
+        }
+
+        const userId = session.session.userId;
+
+        // Update the project only if the user is the owner
         const [updatedProject] = await db
             .update(projects)
             .set({
                 ...data,
                 updatedAt: new Date(),
             })
-            .where(eq(projects.id, projectId))
+            .where(and(
+                eq(projects.id, projectId),
+                eq(projects.userId, userId)
+            ))
             .returning();
 
+        if (!updatedProject) {
+            throw new Error("Forbidden: You can only update projects you own");
+        }
+
+        // Revalidate relevant paths
+        revalidatePath("/projects");
+        revalidatePath(`/projects/${updatedProject.slug}`);
+        revalidatePath("/dashboard");
+
         return updatedProject;
-    } catch (error: any) {
-        console.error("Error updating project:", error);
-        throw new Error(`Failed to update project: ${error.message}`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error updating project:", errorMessage);
+        throw new Error(`Failed to update project: ${errorMessage}`);
     }
 }
 
@@ -183,14 +221,22 @@ export async function updateProject(
  */
 export async function deleteProject(projectId: string) {
     try {
-        await db
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.session) {
+            throw new Error("Unauthorized");
+        }
+        const deleted = await db
             .delete(projects)
-            .where(eq(projects.id, projectId));
-
+            .where(and(eq(projects.id, projectId), eq(projects.userId, session.session.userId)))
+            .returning({ id: projects.id });
+        if (!deleted.length) {
+            throw new Error("Project not found or unauthorized");
+        }
         return true;
-    } catch (error: any) {
-        console.error("Error deleting project:", error);
-        throw new Error(`Failed to delete project: ${error.message}`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error deleting project:", errorMessage);
+        throw new Error(`Failed to delete project: ${errorMessage}`);
     }
 }
 
@@ -199,28 +245,22 @@ export async function deleteProject(projectId: string) {
  */
 export async function incrementViewCount(projectId: string) {
     try {
-        const [project] = await db
-            .select()
-            .from(projects)
-            .where(eq(projects.id, projectId))
-            .limit(1);
-
-        if (!project) {
-            throw new Error("Project not found");
-        }
 
         const [updated] = await db
             .update(projects)
             .set({
-                viewCount: (project.viewCount || 0) + 1,
+                viewCount: sql`${projects.viewCount} + 1`,
                 updatedAt: new Date(),
             })
             .where(eq(projects.id, projectId))
             .returning();
-
+        if (!updated) {
+            throw new Error("Project not found");
+        }
         return updated;
-    } catch (error: any) {
-        console.error("Error incrementing view count:", error);
-        throw new Error(`Failed to increment view count: ${error.message}`);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error incrementing view count:", errorMessage);
+        throw new Error(`Failed to increment view count: ${errorMessage}`);
     }
 }

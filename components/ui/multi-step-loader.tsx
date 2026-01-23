@@ -104,9 +104,9 @@ export const MultiStepLoader = ({
 
   useEffect(() => {
     if (!loading) {
-      setCurrentState(0);
       return;
     }
+    
     const timeout = setTimeout(() => {
       setCurrentState((prevState) =>
         loop
@@ -119,6 +119,9 @@ export const MultiStepLoader = ({
 
     return () => clearTimeout(timeout);
   }, [currentState, loading, loop, loadingStates.length, duration]);
+
+  const displayState = loading ? currentState : 0;
+
   return (
     <AnimatePresence mode="wait">
       {loading && (
@@ -135,7 +138,7 @@ export const MultiStepLoader = ({
           className="w-full h-full fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-2xl"
         >
           <div className="h-96  relative">
-            <LoaderCore value={currentState} loadingStates={loadingStates} />
+            <LoaderCore value={displayState} loadingStates={loadingStates} />
           </div>
 
           <div className="bg-gradient-to-t inset-x-0 z-20 bottom-0 bg-white dark:bg-black h-full absolute [mask-image:radial-gradient(900px_at_center,transparent_30%,white)]" />

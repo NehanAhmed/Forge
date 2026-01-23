@@ -1,6 +1,27 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index, uuid, varchar, integer, jsonb } from "drizzle-orm/pg-core";
 
+// Type definitions for jsonb fields
+type DatabaseTable = {
+  name: string;
+  columns: Array<{
+    name: string;
+    type: string;
+    nullable?: boolean;
+    primaryKey?: boolean;
+    foreignKey?: {
+      table: string;
+      column: string;
+    };
+  }>;
+};
+
+type DatabaseRelationship = {
+  from: string;
+  to: string;
+  type: 'one-to-one' | 'one-to-many' | 'many-to-many';
+};
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -95,8 +116,8 @@ export const projects = pgTable('projects', {
   }>(),
 
   databaseSchema: jsonb('database_schema').$type<{
-    tables?: any[];
-    relationships?: any[];
+    tables?: DatabaseTable[];
+    relationships?: DatabaseRelationship[];
   }>(),
 
   risks: jsonb('risks').$type<Array<{
