@@ -77,12 +77,12 @@ export function SignupForm({
 
         try {
             const response = await authClient.signUp.email({
-                name:data.email,
-                email:data.email,
-                password:data.password,
-                callbackURL:'/'
+                name: data.email,
+                email: data.email,
+                password: data.password,
+                callbackURL: '/'
             })
-            
+
 
             if (response.error) {
                 if (response.error.code === 'USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL') {
@@ -95,10 +95,14 @@ export function SignupForm({
 
                 throw new Error(response.error.message || "Failed to create account");
             }
-            await authClient.signIn.email({
+            const { error: signInError } = await authClient.signIn.email({
                 email: data.email,
                 password: data.password
             })
+
+            if (signInError) {
+                throw new Error(signInError.message || "Failed to sign in");
+            }
             // Successfully created account - redirect to dashboard or login
             router.push("/");
             router.refresh();
@@ -118,7 +122,7 @@ export function SignupForm({
         setError(null);
 
         try {
-          
+
 
             authClient.signIn.social({
                 provider: provider,
