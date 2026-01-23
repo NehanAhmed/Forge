@@ -5,6 +5,14 @@ import { Switch as SwitchPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Render a styled toggle switch (Radix SwitchPrimitive) with configurable size and custom classes.
+ *
+ * @param className - Additional class names applied to the switch root for custom styling
+ * @param size - Size variant, either `"sm"` or `"default"`; controls rendered dimensions
+ * @param props - Additional props forwarded to `SwitchPrimitive.Root`
+ * @returns A React element: the SwitchPrimitive.Root containing a SwitchPrimitive.Thumb
+ */
 function Switch({
   className,
   size = "default",
