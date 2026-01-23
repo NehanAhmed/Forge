@@ -7,7 +7,7 @@ export function FeaturesSection() {
 
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="px-16  text-start mb-16">
+        <div className="px-8 md:px-16  text-start mb-16">
           <motion.div initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="inline-flex items-center gap-2 px-3 py-1 -full bg-primary/10 border border-primary/20 mb-4">

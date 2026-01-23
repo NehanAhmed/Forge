@@ -37,7 +37,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       className="w-full bg-white dark:bg-neutral-950  md:px-10 font-hanken-grotesk"
       ref={containerRef}
     >
-      <div className="container mx-auto mb-16 px-50 text-start  pt-20">
+      <div className="container  mb-16 mx-auto px-10 md:px-50 text-start  pt-20">
         <motion.div initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} className="mb-4 inline-flex items-center gap-2 -full border border-primary/20 bg-primary/10 px-3 py-1">
@@ -98,7 +98,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] -full"
+            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-primary via-destructive to-secondary"
           />
         </div>
       </div>
