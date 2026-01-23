@@ -3,11 +3,10 @@ import { motion } from 'motion/react'
 import { Tweet } from 'react-tweet'
 
 const Testimonial = () => {
-    console.log();
-    
+
     return (
         <section className='w-full min-h-[50vh] flex flex-col items-center justify-start gap-10 mt-20'>
-            <div className='w-1/2 text-start   flex flex-col gap-3 justify-center items-start '>
+            <div className='w-1/2 text-start    flex flex-col gap-3 justify-center items-start '>
                 <div className='flex flex-col gap-5 items-start justify-start'>
                     <motion.div initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -34,7 +33,7 @@ const Testimonial = () => {
                     viewport={{ once: true }} transition={{ delay: 0.4 }} className='text-lg text-muted-foreground max-w-2xl  font-hanken-grotesk'>Real developers. Real projects. Fewer late nights debugging things that should’ve been planned better. Forge helped them ship faster — and sleep slightly more.
                 </motion.p>
             </div>
-            <div className='w-full flex items-center justify-center gap-4'>
+            <div className='w-full items-center justify-center gap-4 hidden lg:flex'>
                 <Tweet id='1996143465558835216' />
                 <Tweet id='2013302602931265571' />
                 <Tweet id='1683920951807971329' />

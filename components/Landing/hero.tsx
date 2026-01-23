@@ -24,11 +24,11 @@ const Hero = () => {
 
                 <motion.h1 initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ delay: 0.2 }} className='text-6xl tracking-tight font-extrabold font-hanken-grotesk '> <span className='bg-gradient-to-r from-primary via-destructive to-secondary bg-clip-text text-transparent'> Project Planning</span> at <br /> the Speed of Thought
+                    viewport={{ once: true }} transition={{ delay: 0.2 }} className='text-4xl md:text-6xl tracking-tight font-extrabold font-hanken-grotesk '> <span className='bg-gradient-to-r from-primary via-destructive to-secondary bg-clip-text text-transparent'> Project Planning</span> at <br /> the Speed of Thought
                 </motion.h1>
                 <motion.p initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ delay: 0.3 }} className='text-lg text-neutral-400 w-200'>Describe your idea. Get a complete technical plan with stack recommendations, database schema, risk analysis, and a development roadmap. In seconds, not sprints.</motion.p>
+                    viewport={{ once: true }} transition={{ delay: 0.3 }} className='text-sm md:text-lg text-neutral-400 w-120 md:w-200'>Describe your idea. Get a complete technical plan with stack recommendations, database schema, risk analysis, and a development roadmap. In seconds, not sprints.</motion.p>
             </div>
             <div className='mt-6 flex items-center justify-center gap-4'>
                 <FlipLink href={'/create'}>
