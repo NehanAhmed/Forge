@@ -90,6 +90,15 @@ const projectSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
+/**
+ * Render a project creation form with validation and submission handling.
+ *
+ * The form collects basic information, optional project details, and visibility settings;
+ * it validates input using the defined schema, submits data to the server, shows success or error toasts,
+ * and navigates to the created project's page when available.
+ *
+ * @returns A React element that renders the project creation form and related UI.
+ */
 export function ProjectForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();

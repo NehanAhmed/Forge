@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   description: "Forge transforms vague project ideas into structured, actionable plans with tech stack recommendations, database schemas, risk analysis, and development roadmaps—generated in seconds using AI.",
 };
 
+/**
+ * Root layout component that wraps application pages with global fonts, theme management, and a toast container.
+ *
+ * @param children - The page content to render inside the layout.
+ * @returns The top-level HTML structure (html > body) containing font classes, ThemeProvider, and a configured Toaster.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

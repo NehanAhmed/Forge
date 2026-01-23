@@ -8,6 +8,13 @@ import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 
+/**
+ * Produce a URL-friendly slug from a title.
+ *
+ * Converts the input to lowercase, replaces sequences of non-alphanumeric characters with single dashes, trims leading and trailing dashes, and truncates the result to 255 characters.
+ *
+ * @returns The normalized, URL-safe slug for the provided `title`, truncated to 255 characters.
+ */
 function generateSlug(title: string): string {
     return title
         .toLowerCase()
@@ -28,7 +35,10 @@ type CreateProjectInput = {
 };
 
 /**
- * Retrieves all public projects, ordered by creation date (newest first)
+ * Retrieves all public projects ordered by creation date descending.
+ *
+ * @returns An array of public project records, ordered newest first.
+ * @throws When fetching projects fails.
  */
 export async function getAllProjects() {
     try {
@@ -46,7 +56,10 @@ export async function getAllProjects() {
 }
 
 /**
- * Retrieves projects for a specific user
+ * Fetches projects belonging to a given user, ordered by creation date descending.
+ *
+ * @param userId - The ID of the user whose projects to retrieve
+ * @returns An array of projects for the given user, ordered with newest projects first
  */
 export async function getUserProjects(userId: string) {
     try {
@@ -64,7 +77,10 @@ export async function getUserProjects(userId: string) {
 }
 
 /**
- * Retrieves a single project by slug
+ * Fetches the project that matches the given slug.
+ *
+ * @param slug - The URL-friendly identifier for the project
+ * @returns The matching project object if found, `null` otherwise
  */
 export async function getProjectBySlug(slug: string) {
     try {
@@ -82,7 +98,13 @@ export async function getProjectBySlug(slug: string) {
 }
 
 /**
- * Creates a new project with direct database insertion
+ * Create a new project record in the database and return the inserted project.
+ *
+ * Generates a URL-friendly unique slug from the title (appending a numeric suffix if needed), assigns the current authenticated user as the owner when available, initializes `viewCount` and `forkCount` to 0, inserts the record, and triggers revalidation for "/projects" and "/dashboard".
+ *
+ * @param data - The input data for the new project
+ * @returns The newly created project record
+ * @throws Error if the project cannot be created
  */
 export async function createProject({ data }: { data: CreateProjectInput }) {
     try {
@@ -155,7 +177,12 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
     }
 }
 /**
- * Updates an existing project
+ * Apply partial updates to a project identified by its ID.
+ *
+ * @param projectId - The ID of the project to update
+ * @param data - Partial set of project fields to update; `id` and `createdAt` are excluded
+ * @returns The updated project record, or `undefined` if no project matched the provided ID
+ * @throws Error if the update operation fails
  */
 export async function updateProject(
     projectId: string,
@@ -179,7 +206,11 @@ export async function updateProject(
 }
 
 /**
- * Deletes a project
+ * Delete a project by its ID.
+ *
+ * @param projectId - The ID of the project to delete
+ * @returns `true` if the project was deleted successfully
+ * @throws Error when deletion fails
  */
 export async function deleteProject(projectId: string) {
     try {
@@ -195,7 +226,12 @@ export async function deleteProject(projectId: string) {
 }
 
 /**
- * Increments the view count for a project
+ * Increment a project's view count by one.
+ *
+ * @param projectId - The ID of the project whose view count will be incremented
+ * @returns The updated project record as returned by the database
+ * @throws If no project with the given `projectId` is found
+ * @throws If the database operation fails
  */
 export async function incrementViewCount(projectId: string) {
     try {
