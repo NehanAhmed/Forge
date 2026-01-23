@@ -6,6 +6,7 @@ import { IconArrowLeft, IconArrowRight, IconArrowUpRight, IconCalendar, IconUser
 import { Button } from "./button";
 import { Badge } from "./badge";
 import Image from "next/image";
+import { FlipLink } from "../Landing/FlipLink";
 
 
 // ----------------------------------------------------------------------
@@ -158,10 +159,13 @@ export default function ModernCarousel({
 
                 {/* Actions */}
                 <motion.div variants={textVariants} className="flex items-center gap-4 pt-4">
-                  <Button variant="default">
-                    {slide.ctaText}
-                    <IconArrowUpRight className="ml-2 w-4 h-4" />
-                  </Button>
+                  <FlipLink href={`/p/${slide.id}`}>
+
+                    <Button variant="default">
+                      {slide.ctaText}
+                      <IconArrowUpRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </FlipLink>
                 </motion.div>
               </motion.div>
             </AnimatePresence>
@@ -189,8 +193,8 @@ export default function ModernCarousel({
                 setCurrent(idx);
               }}
               className={`h-1.5 -full transition-all duration-300 ${current === idx
-                  ? "w-8 bg-primary"
-                  : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+                ? "w-8 bg-primary"
+                : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/60"
                 }`}
               aria-label={`Go to slide ${idx + 1}`}
             />

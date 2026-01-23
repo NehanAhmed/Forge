@@ -3,11 +3,11 @@ import { ForgeFeaturesBento } from "./features-bento";
 import { motion } from 'motion/react'
 export function FeaturesSection() {
   return (
-    <section className="relative py-24 px-4 overflow-hidden mt-40">
+    <section className="relative py-24 px-4 overflow-hidden mt-40 ">
 
       <div className="relative max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="px-16  text-start mb-16">
           <motion.div initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} className="inline-flex items-center gap-2 px-3 py-1 -full bg-primary/10 border border-primary/20 mb-4">
@@ -32,7 +32,7 @@ export function FeaturesSection() {
 
           <motion.p initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} transition={{ delay: 0.3 }} className="text-lg text-muted-foreground max-w-2xl mx-auto font-hanken-grotesk">
+            viewport={{ once: true }} transition={{ delay: 0.3 }} className="text-lg text-muted-foreground max-w-2xl  font-hanken-grotesk">
             Forge combines intelligent analysis with developer-focused tools
             to transform your project ideas into actionable plans.
           </motion.p>

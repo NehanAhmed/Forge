@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 
 import { Button } from '@/components/ui/button'; 
 import { IconArrowRight, IconBrandGithubFilled, IconBrandLinkedinFilled, IconBrandTwitter, IconBrandTwitterFilled, IconCpu, IconTerminal } from '@tabler/icons-react';
+import { FlipLink } from './FlipLink';
 // Assuming Button is at this path, adjust if necessary
 
 // --- Configuration ---
@@ -107,13 +108,13 @@ const Footer = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            <Link href="/create">
+            <FlipLink href="/create">
               <Button size="lg" className="group">
                 <IconTerminal className="mr-2 h-4 w-4" />
                 Start Planning
                 <IconArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-            </Link>
+            </FlipLink>
           </div>
         </motion.div>
 

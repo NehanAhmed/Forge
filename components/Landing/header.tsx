@@ -22,7 +22,9 @@ const Header = () => {
     font-hanken-grotesk
   ">
             <div className='px-2'>
+                <Link href={'/'}>
                 <h1 className='text-3xl font-semibold font-space-grotesk uppercase'>Forge</h1>
+                </Link>
             </div>
             <div className='w-10/12 px-15  flex items-end justify-start gap-6 font-hanken-grotesk'>
                 {NAV_LINKS.map((val) => (

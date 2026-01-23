@@ -37,7 +37,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       className="w-full bg-white dark:bg-neutral-950  md:px-10 font-hanken-grotesk"
       ref={containerRef}
     >
-      <div className="container mx-auto mb-16 px-4 text-center pt-20">
+      <div className="container mx-auto mb-16 px-50 text-start  pt-20">
         <motion.div initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }} className="mb-4 inline-flex items-center gap-2 -full border border-primary/20 bg-primary/10 px-3 py-1">
@@ -58,7 +58,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
         <motion.p initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }} transition={{ delay: 0.4 }} className="mx-auto max-w-2xl text-lg text-muted-foreground font-hanken-grotesk">
+          viewport={{ once: true }} transition={{ delay: 0.4 }} className=" max-w-2xl text-lg text-muted-foreground font-hanken-grotesk">
           From idea to execution in four simple steps. No complex setup, no steep learning curve—just intelligent planning that works.
         </motion.p>
       </div>
