@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Hanken_Grotesk, Inter, Josefin_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const hanken = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-hanken-grotesk' });
 
@@ -31,7 +32,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster richColors position="top-right" closeButton expand  />
           {children}
+
         </ThemeProvider>
       </body>
     </html>

@@ -2,7 +2,6 @@ import ProjectsGrid from '@/components/Landing/Explore/projects-grid'
 import SearchFilter from '@/components/Landing/Explore/search-filter'
 import { Separator } from '@/components/ui/separator'
 import { getAllProjects } from '@/lib/actions/projects.action'
-import { Project } from '@/lib/db/schema'
 import React, { Suspense } from 'react'
 
 
