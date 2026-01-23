@@ -3,7 +3,7 @@ import SearchFilter from '@/components/Landing/Explore/search-filter'
 import { Separator } from '@/components/ui/separator'
 import { getAllProjects } from '@/lib/actions/projects.action'
 import { Project } from '@/lib/db/schema'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 
 const Page = async () => {
@@ -17,7 +17,10 @@ const Page = async () => {
                 <p className='text-lg text-neutral-400 w-240'>Explore real project blueprints and architectures. Clone smarter, ship faster, think less.                </p>
             </div>
             <Separator className='mt-10' />
+            <Suspense>
+
             <SearchFilter />
+            </Suspense>
             <Separator className='mt-10' />
             <ProjectsGrid projects={projects} />
         </main>
