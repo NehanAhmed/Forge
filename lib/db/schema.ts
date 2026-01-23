@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index, uuid, varchar, integer, jsonb } from "drizzle-orm/pg-core";
 
 // Type definitions for jsonb fields
@@ -176,3 +176,7 @@ export const projectRelations = relations(projects, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+
+
+export type Project = InferSelectModel<typeof projects>;
