@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/card";
 
 // Icons (Tabler)
-import { 
+import {
   IconLoader2,
   IconSparkles,
   IconAlignLeft,
@@ -45,6 +45,7 @@ import {
 
 // Server Action
 import { createProject } from "@/lib/actions/projects.action";
+import { Separator } from "@/components/ui/separator";
 
 // --- Configuration ---
 
@@ -69,12 +70,12 @@ const projectSchema = z.object({
     .string()
     .min(3, { message: "Title must be at least 3 characters" })
     .max(255, { message: "Title must be less than 255 characters" }),
-  
+
   description: z
     .string()
     .min(10, { message: "Description must be at least 10 characters" })
     .max(5000, { message: "Description is too long" }),
-  
+
   problemStatement: z
     .string()
     .min(10, { message: "Problem statement must be at least 10 characters" })
@@ -96,7 +97,7 @@ const projectSchema = z.object({
   ),
 
   budgetRange: z.string().optional(),
-  
+
   isPublic: z.boolean(),
 });
 
@@ -143,7 +144,7 @@ export function ProjectForm() {
 
   const onSubmit = async (data: ProjectFormValues) => {
     setIsSubmitting(true);
-    
+
     // Simulate initial delay for UX
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -171,8 +172,8 @@ export function ProjectForm() {
       });
 
       if (result?.slug) {
-        router.prefetch(`/projects/${result.slug}`);
-        router.push(`/projects/${result.slug}`);
+        router.prefetch(`/p/${result.slug}`);
+        router.push(`/p/${result.slug}`);
       } else {
         router.refresh();
       }
@@ -186,20 +187,20 @@ export function ProjectForm() {
   };
 
   return (
-    <div className="w-full max-w-6xl  p-6 md:p-10 font-hanken-grotesk">
-      <Loader 
-        loadingStates={loadingStates} 
-        loading={isSubmitting} 
-        duration={1500} 
+    <div className="w-full max-w-full  p-6 md:p-10 font-hanken-grotesk flex  gap-10">
+      <Loader
+        loadingStates={loadingStates}
+        loading={isSubmitting}
+        duration={1500}
         loop={false}
       />
 
-     
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ">
-        
+
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full  space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ">
+
         <div className="grid grid-cols-1 lg:grid-cols-13 gap-8">
-          
+
           {/* LEFT COLUMN: Core Information */}
           <div className="lg:col-span-8 space-y-6">
             <Card className="border-border/50 shadow-sm transition-all hover:border-primary/20">
@@ -213,7 +214,7 @@ export function ProjectForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                
+
                 {/* Title */}
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -274,7 +275,7 @@ export function ProjectForm() {
 
           {/* RIGHT COLUMN: Details & Config */}
           <div className="lg:col-span-5 space-y-6">
-            
+
             {/* Project Specs Card */}
             <Card className="border-border/50 shadow-sm h-fit">
               <CardHeader>
@@ -284,7 +285,7 @@ export function ProjectForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="grid gap-5">
-                
+
                 {/* Target Users */}
                 <div className="space-y-2">
                   <Label htmlFor="targetUsers" className="flex items-center gap-2 text-sm font-medium">
@@ -317,7 +318,7 @@ export function ProjectForm() {
                       placeholder="e.g. 5"
                       {...register("teamSize")}
                     />
-                     {errors.teamSize && <p className="text-destructive text-xs">{errors.teamSize.message}</p>}
+                    {errors.teamSize && <p className="text-destructive text-xs">{errors.teamSize.message}</p>}
                   </div>
 
                   {/* Timeline */}
@@ -367,10 +368,10 @@ export function ProjectForm() {
 
             {/* Visibility Card */}
             <Card className={cn(
-                "border-border/50 transition-colors", 
-                isPublic ? "bg-muted/10" : "bg-muted/30 border-secondary/50"
-              )}>
-              <CardContent className="pt-6">
+              "border-border/50 transition-colors",
+              isPublic ? "bg-muted/10" : "bg-muted/30 border-secondary/50"
+            )}>
+              <CardContent className="">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -398,10 +399,10 @@ export function ProjectForm() {
 
             {/* Actions */}
             <div className="flex flex-col gap-3 pt-4">
-              <Button 
-                type="submit" 
-                size="lg" 
-                disabled={isSubmitting || !isValid} 
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isSubmitting || !isValid}
                 className={cn(
                   "w-full text-base font-semibold shadow-lg transition-all",
                   "hover:scale-[1.02] active:scale-[0.98]",
@@ -420,7 +421,7 @@ export function ProjectForm() {
                   </>
                 )}
               </Button>
-              
+
               <Button
                 type="button"
                 variant="ghost"
@@ -435,6 +436,7 @@ export function ProjectForm() {
           </div>
         </div>
       </form>
+     
     </div>
   );
 }
