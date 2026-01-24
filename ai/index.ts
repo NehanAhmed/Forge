@@ -5,8 +5,12 @@ import { SYSTEM_PROMPT } from "./ai-prompt";
 
 const generateAiResponse = async (aiInputData: AIRequest): Promise<AIProjectPlanResponse> => {
     try {
+        const modelName = process.env.OPENROUTER_AI_MODEL;
+        if (!modelName) {
+            throw new Error('OPENROUTER_AI_MODEL is not set');
+        }
         const response = await generateText({
-            model: openrouter.completion(process.env.OPENROUTER_AI_MODEL as string),
+            model: openrouter.completion(modelName),
             system: SYSTEM_PROMPT,
             prompt: `Please analyze this project and generate a comprehensive pre-production plan:
 
@@ -22,8 +26,8 @@ Generate the complete JSON plan now.`
         });
 
         // Safe parsing with validation
-        const parsedResult: ParsedProjectPlan = parseAIResponse(response.output);
-        if (!parsedResult.success) {
+        const parsedResult: ParsedProjectPlan = parseAIResponse(response.text);
+         if (!parsedResult.success) {
             throw new Error(`Failed to parse AI response: ${parsedResult.error}`);
         }
 

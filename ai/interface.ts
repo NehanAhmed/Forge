@@ -1,12 +1,12 @@
 
 export interface AIRequest {
-    title: string
-    description: string
-    problemStatement: string
-    targetUsers: number
-    teamSize: number
-    timelineWeeks: number
-    budgetRange: string
+  title: string
+  description: string
+  problemStatement: string
+  targetUsers?: number | null
+  teamSize?: number | null
+  timelineWeeks?: number | null
+  budgetRange?: string | null
 }
 
 
@@ -146,7 +146,7 @@ export function isValidAIProjectPlanResponse(data: any): data is AIProjectPlanRe
 }
 
 // Optional: Helper type for parsing and validation
-export type ParsedProjectPlan = 
+export type ParsedProjectPlan =
   | { success: true; data: AIProjectPlanResponse }
   | { success: false; error: string };
 
@@ -154,19 +154,19 @@ export type ParsedProjectPlan =
 export function parseAIResponse(jsonString: string): ParsedProjectPlan {
   try {
     const parsed = JSON.parse(jsonString);
-    
+
     if (isValidAIProjectPlanResponse(parsed)) {
       return { success: true, data: parsed };
     }
-    
-    return { 
-      success: false, 
-      error: 'Invalid response structure from AI' 
+
+    return {
+      success: false,
+      error: 'Invalid response structure from AI'
     };
   } catch (error) {
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Failed to parse JSON' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to parse JSON'
     };
   }
 }

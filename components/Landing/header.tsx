@@ -30,7 +30,7 @@ const NAV_LINKS = [
     { id: 2, label: "Ship Something", href: "/create" },
     { id: 3, label: "Buy Me Coffee", href: "/support" }
 ]
-w
+
 
 
 interface User {
