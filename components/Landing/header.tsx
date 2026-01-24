@@ -26,10 +26,11 @@ import {
 import LogoutButton from "../logout-button"
 
 const NAV_LINKS = [
-    { id: 1, label: "Explore", href: "/explore" },
-    { id: 2, label: "Create Project", href: "/create" },
-    { id: 3, label: "Support Me", href: "/support" }
+    { id: 1, label: "Browse Ideas", href: "/explore" },
+    { id: 2, label: "Ship Something", href: "/create" },
+    { id: 3, label: "Buy Me Coffee", href: "/support" }
 ]
+
 
 
 interface User {

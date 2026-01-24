@@ -38,7 +38,8 @@ const Hero = () => {
                         Start Planning
                         <IconArrowRight /></Button>
                 </FlipLink>
-                <FlipLink>
+                <FlipLink href='/explore'>
+
                     <Button size={'lg'} variant={'outline'}>
                         <IconWorldSearch />
                         Explore
