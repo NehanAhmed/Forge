@@ -17,9 +17,7 @@ const generateAiResponse = async (aiInputData: AIRequest): Promise<AIProjectPlan
             throw new Error('OPENROUTER_API_KEY environment variable is not set');
         }
 
-        console.log('🤖 Using model:', modelName);
-        console.log('📝 API Key exists:', !!apiKey);
-
+        
         const response = await generateText({
             model: openrouter.completion(modelName),
             system: SYSTEM_PROMPT,
@@ -36,9 +34,7 @@ Budget Range: ${aiInputData.budgetRange ?? 'Not specified'}
 Generate the complete JSON plan now.`
         });
 
-        console.log('✅ AI response received');
-        console.log('📏 Response length:', response.text.length);
-
+        
         // Safe parsing with validation
         const parsedResult: ParsedProjectPlan = parseAIResponse(response.text);
         if (!parsedResult.success) {
@@ -47,7 +43,6 @@ Generate the complete JSON plan now.`
             throw new Error(`Failed to parse AI response: ${parsedResult.error}`);
         }
 
-        console.log('✅ Parse successful');
         return parsedResult.data;
 
     } catch (error) {
@@ -74,12 +69,6 @@ Generate the complete JSON plan now.`
 
 export async function planGenerator(data: AIRequest): Promise<AIProjectPlanResponse> {
     try {
-        console.log('🚀 Plan generator called with:', {
-            title: data.title,
-            teamSize: data.teamSize,
-            timeline: data.timelineWeeks,
-            budget: data.budgetRange
-        });
         
         const { title, description, problemStatement } = data;
 
@@ -91,9 +80,6 @@ export async function planGenerator(data: AIRequest): Promise<AIProjectPlanRespo
         // Generate and return the plan
         const plan = await generateAiResponse(data);
         
-        console.log('✅ Plan generated successfully');
-        console.log('📊 Confidence:', plan.metadata.confidenceScore);
-        console.log('⏱️  Adjusted timeline:', plan.roadmap.adjustedTimelineWeeks, 'weeks');
         
         return plan;
 

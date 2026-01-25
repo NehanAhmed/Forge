@@ -93,10 +93,33 @@ export async function getProjectBySlug(slug: string, userId?: string | null) {
     }
 }
 
+async function generateUniqueSlug(baseTitle: string): Promise<string> {
+    const baseSlug = generateSlug(baseTitle);
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+        const [existing] = await db
+            .select()
+            .from(projects)
+            .where(eq(projects.slug, slug))
+            .limit(1);
+
+        if (!existing) break;
+
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+    }
+
+    return slug;
+}
 /**
  * Creates a new project with direct database insertion
  */
 export async function createProject({ data }: { data: CreateProjectInput }) {
+    const MAX_RETRIES = 3;
+    let lastError: Error | null = null;
+
     try {
         // Get authenticated user
         const session = await auth.api.getSession({
@@ -114,25 +137,6 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
             isPublic,
         } = data;
 
-        // Generate a unique slug
-        const baseSlug = generateSlug(title);
-        let slug = baseSlug;
-        let counter = 1;
-
-        // Check if slug exists and make it unique
-        while (true) {
-            const [existing] = await db
-                .select()
-                .from(projects)
-                .where(eq(projects.slug, slug))
-                .limit(1);
-
-            if (!existing) break;
-
-            slug = `${baseSlug}-${counter}`;
-            counter++;
-        }
-
         const userId = session?.session ? session.session.userId : null;
 
         console.log('🎯 Generating AI plan...');
@@ -145,8 +149,7 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
             targetUsers,
             teamSize,
             timelineWeeks,
-            budgetRange,    
-
+            budgetRange,
         });
 
         if (!response) {
@@ -155,41 +158,70 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
 
         console.log('💾 Saving project to database...');
 
-        // Create the project with AI-generated data
-        const [newProject] = await db
-            .insert(projects)
-            .values({
-                title,
-                description,
-                problemStatement,
-                targetUsers,
-                teamSize,
-                timelineWeeks: response.roadmap.adjustedTimelineWeeks, // Use AI's adjusted timeline
-                budgetRange,
-                isPublic,
-                slug,
-                userId,
-                viewCount: 0,
-                forkCount: 0,
-                // AI-generated fields
-                databaseSchema: response.databaseSchema,
-                keyFeatures: response.keyFeatures,
-                risks: response.risks,
-                roadmap: response.roadmap,
-                techStack: response.techStack,
-            })
-            .returning();
+        // Retry logic for slug uniqueness
+        for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+            try {
+                // Re-check and generate unique slug right before insertion
+                const slug = await generateUniqueSlug(title);
 
-        console.log('✅ Project created successfully:', newProject.id);
+                // Create the project with AI-generated data
+                const [newProject] = await db
+                    .insert(projects)
+                    .values({
+                        title,
+                        description,
+                        problemStatement,
+                        targetUsers,
+                        teamSize,
+                        timelineWeeks: response.roadmap.adjustedTimelineWeeks,
+                        budgetRange,
+                        isPublic,
+                        slug,
+                        userId,
+                        viewCount: 0,
+                        forkCount: 0,
+                        // AI-generated fields
+                        databaseSchema: response.databaseSchema,
+                        keyFeatures: response.keyFeatures,
+                        risks: response.risks,
+                        roadmap: response.roadmap,
+                        techStack: response.techStack,
+                    })
+                    .returning();
 
-        return {
-            success: true,
-            project: newProject,
-            metadata: {
-                confidenceScore: response.metadata.confidenceScore,
-                adjustmentsMade: response.metadata.adjustmentsMade,
+                console.log('✅ Project created successfully:', newProject.id);
+
+                return {
+                    success: true,
+                    project: newProject,
+                    metadata: {
+                        confidenceScore: response.metadata.confidenceScore,
+                        adjustmentsMade: response.metadata.adjustmentsMade,
+                    }
+                };
+
+            } catch (insertError: unknown) {
+                const errorMessage = insertError instanceof Error ? insertError.message : String(insertError);
+
+                // Check if it's a unique constraint violation on slug
+                const isSlugConflict = errorMessage.toLowerCase().includes('unique') &&
+                    errorMessage.toLowerCase().includes('slug');
+
+                if (isSlugConflict && attempt < MAX_RETRIES - 1) {
+                    console.log(`⚠️ Slug conflict detected, retrying... (attempt ${attempt + 1}/${MAX_RETRIES})`);
+                    lastError = insertError instanceof Error ? insertError : new Error(errorMessage);
+                    // Add small delay before retry to reduce race condition likelihood
+                    await new Promise(resolve => setTimeout(resolve, 100 * (attempt + 1)));
+                    continue;
+                }
+
+                // If it's not a slug conflict or we've exhausted retries, throw
+                throw insertError;
             }
-        };
+        }
+
+        // If we exhausted all retries
+        throw lastError || new Error("Failed to create project after multiple attempts");
 
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);

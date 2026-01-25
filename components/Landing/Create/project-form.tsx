@@ -165,9 +165,10 @@ export function ProjectForm() {
 
       // 2. Call Server Action
       const result = await createProject({ data: cleanedData });
-      if(!result.success){
-        toast.error("An Error Occured.")
-        return
+      if (!result.success) {
+        toast.error("An Error Occurred.");
+        setIsSubmitting(false);
+        return;
       }
       toast.success("Project Initiated", {
         description: "Your project structure has been generated successfully.",
@@ -439,7 +440,7 @@ export function ProjectForm() {
           </div>
         </div>
       </form>
-     
+
     </div>
   );
 }
