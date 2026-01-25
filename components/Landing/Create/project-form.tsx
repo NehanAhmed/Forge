@@ -165,15 +165,19 @@ export function ProjectForm() {
 
       // 2. Call Server Action
       const result = await createProject({ data: cleanedData });
-
+      if (!result.success) {
+        toast.error("An Error Occurred.");
+        setIsSubmitting(false);
+        return;
+      }
       toast.success("Project Initiated", {
         description: "Your project structure has been generated successfully.",
         duration: 4000,
       });
 
-      if (result?.slug) {
-        router.prefetch(`/p/${result.slug}`);
-        router.push(`/p/${result.slug}`);
+      if (result?.project.slug) {
+        router.prefetch(`/p/${result.project.slug}`);
+        router.push(`/p/${result.project.slug}`);
       } else {
         router.refresh();
       }
@@ -191,7 +195,7 @@ export function ProjectForm() {
       <Loader
         loadingStates={loadingStates}
         loading={isSubmitting}
-        duration={1500}
+        duration={8000}
         loop={false}
       />
 
@@ -436,7 +440,7 @@ export function ProjectForm() {
           </div>
         </div>
       </form>
-     
+
     </div>
   );
 }
