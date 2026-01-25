@@ -6,6 +6,7 @@ import { eq, desc, and, sql } from "drizzle-orm";
 import { auth } from "@/auth";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { planGenerator } from "@/ai";
 
 
 function generateSlug(title: string): string {
@@ -102,8 +103,6 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
             headers: await headers()
         });
 
-
-
         const {
             title,
             description,
@@ -134,9 +133,29 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
             counter++;
         }
 
-        const userId = session?.session ? session.session.userId : null
+        const userId = session?.session ? session.session.userId : null;
 
-        // Create the project
+        console.log('🎯 Generating AI plan...');
+
+        // Generate AI plan
+        const response = await planGenerator({
+            title,
+            description,
+            problemStatement,
+            targetUsers,
+            teamSize,
+            timelineWeeks,
+            budgetRange,    
+
+        });
+
+        if (!response) {
+            throw new Error("Failed to generate AI plan - no response received");
+        }
+
+        console.log('💾 Saving project to database...');
+
+        // Create the project with AI-generated data
         const [newProject] = await db
             .insert(projects)
             .values({
@@ -145,25 +164,45 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
                 problemStatement,
                 targetUsers,
                 teamSize,
-                timelineWeeks,
+                timelineWeeks: response.roadmap.adjustedTimelineWeeks, // Use AI's adjusted timeline
                 budgetRange,
                 isPublic,
                 slug,
                 userId,
                 viewCount: 0,
                 forkCount: 0,
+                // AI-generated fields
+                databaseSchema: response.databaseSchema,
+                keyFeatures: response.keyFeatures,
+                risks: response.risks,
+                roadmap: response.roadmap,
+                techStack: response.techStack,
             })
             .returning();
 
-        // Revalidate relevant paths
-        revalidatePath("/projects");
-        revalidatePath("/dashboard");
+        console.log('✅ Project created successfully:', newProject.id);
 
-        return newProject;
+        return {
+            success: true,
+            project: newProject,
+            metadata: {
+                confidenceScore: response.metadata.confidenceScore,
+                adjustmentsMade: response.metadata.adjustmentsMade,
+            }
+        };
+
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error("Error creating project:", errorMessage);
-        throw new Error(errorMessage || "Failed to create project");
+        console.error("❌ Error creating project:", errorMessage);
+
+        // Provide more specific error messages
+        if (errorMessage.includes('parse')) {
+            throw new Error("Failed to process AI response. Please try again.");
+        } else if (errorMessage.includes('required')) {
+            throw new Error(errorMessage);
+        } else {
+            throw new Error("Failed to create project. Please try again later.");
+        }
     }
 }
 /**

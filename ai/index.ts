@@ -5,10 +5,21 @@ import { SYSTEM_PROMPT } from "./ai-prompt";
 
 const generateAiResponse = async (aiInputData: AIRequest): Promise<AIProjectPlanResponse> => {
     try {
+        // Validate environment variables
         const modelName = process.env.OPENROUTER_AI_MODEL;
+        const apiKey = process.env.OPENROUTER_API_KEY;
+        
         if (!modelName) {
-            throw new Error('OPENROUTER_AI_MODEL is not set');
+            throw new Error('OPENROUTER_AI_MODEL environment variable is not set');
         }
+        
+        if (!apiKey) {
+            throw new Error('OPENROUTER_API_KEY environment variable is not set');
+        }
+
+        console.log('🤖 Using model:', modelName);
+        console.log('📝 API Key exists:', !!apiKey);
+
         const response = await generateText({
             model: openrouter.completion(modelName),
             system: SYSTEM_PROMPT,
@@ -25,23 +36,52 @@ Budget Range: ${aiInputData.budgetRange ?? 'Not specified'}
 Generate the complete JSON plan now.`
         });
 
+        console.log('✅ AI response received');
+        console.log('📏 Response length:', response.text.length);
+
         // Safe parsing with validation
         const parsedResult: ParsedProjectPlan = parseAIResponse(response.text);
-         if (!parsedResult.success) {
+        if (!parsedResult.success) {
+            console.error('❌ Parse failed:', parsedResult.error);
+            console.error('📄 First 500 chars:', response.text.substring(0, 500));
             throw new Error(`Failed to parse AI response: ${parsedResult.error}`);
         }
 
+        console.log('✅ Parse successful');
         return parsedResult.data;
+
     } catch (error) {
-        // Re-throw with more context
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-        throw new Error(`AI Response Generation Failed: ${errorMessage}`);
+        // Enhanced error logging
+        console.error('🔥 Error in generateAiResponse:', error);
+        
+        if (error instanceof Error) {
+            // Check for specific OpenRouter errors
+            if (error.message.includes('User not found')) {
+                throw new Error('OpenRouter authentication failed. Please check your API key.');
+            }
+            if (error.message.includes('rate limit')) {
+                throw new Error('API rate limit exceeded. Please try again later.');
+            }
+            if (error.message.includes('insufficient credits')) {
+                throw new Error('Insufficient OpenRouter credits. Please add credits to your account.');
+            }
+            throw new Error(`AI Response Generation Failed: ${error.message}`);
+        }
+        
+        throw new Error('AI Response Generation Failed: Unknown error occurred');
     }
 }
 
-export async function planGenerator({ data }: { data: AIRequest }): Promise<AIProjectPlanResponse> {
+export async function planGenerator(data: AIRequest): Promise<AIProjectPlanResponse> {
     try {
-        const { budgetRange, description, problemStatement, targetUsers, teamSize, timelineWeeks, title } = data;
+        console.log('🚀 Plan generator called with:', {
+            title: data.title,
+            teamSize: data.teamSize,
+            timeline: data.timelineWeeks,
+            budget: data.budgetRange
+        });
+        
+        const { title, description, problemStatement } = data;
 
         // Validate required fields
         if (!title || !description || !problemStatement) {
@@ -50,9 +90,15 @@ export async function planGenerator({ data }: { data: AIRequest }): Promise<AIPr
 
         // Generate and return the plan
         const plan = await generateAiResponse(data);
+        
+        console.log('✅ Plan generated successfully');
+        console.log('📊 Confidence:', plan.metadata.confidenceScore);
+        console.log('⏱️  Adjusted timeline:', plan.roadmap.adjustedTimelineWeeks, 'weeks');
+        
         return plan;
 
     } catch (error: unknown) {
+        console.error('🔥 Error in planGenerator:', error);
         const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
         throw new Error(`Plan Generation Failed: ${errorMessage}`);
     }

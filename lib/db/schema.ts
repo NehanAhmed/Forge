@@ -1,25 +1,64 @@
 import { InferSelectModel, relations } from "drizzle-orm";
 import { pgTable, text, timestamp, boolean, index, uuid, varchar, integer, jsonb } from "drizzle-orm/pg-core";
 
-// Type definitions for jsonb fields
+// Type definitions for jsonb fields matching AI response
+type DatabaseColumn = {
+  name: string;
+  type: string;
+  nullable: boolean;
+  primaryKey?: boolean;
+  foreignKey?: {
+    table: string;
+    column: string;
+  };
+};
+
 type DatabaseTable = {
   name: string;
-  columns: Array<{
-    name: string;
-    type: string;
-    nullable?: boolean;
-    primaryKey?: boolean;
-    foreignKey?: {
-      table: string;
-      column: string;
-    };
-  }>;
+  columns: DatabaseColumn[];
 };
 
 type DatabaseRelationship = {
   from: string;
   to: string;
-  type: 'one-to-one' | 'one-to-many' | 'many-to-many';
+  type: 'one-to-one' | 'one-to-many' | 'many-to-many' | 'many-to-one';
+};
+
+type TechStack = {
+  frontend?: string[];
+  backend?: string[];
+  database?: string[];
+  devops?: string[];
+  rationale: string;
+};
+
+type Risk = {
+  title: string;
+  description: string;
+  severity: 'Critical' | 'High' | 'Medium' | 'Low';
+  mitigation: string;
+  category: 'Technical' | 'Business' | 'Timeline' | 'Budget' | 'Team';
+};
+
+type RoadmapPhase = {
+  name: string;
+  duration: string;
+  tasks: string[];
+  deliverables: string[];
+  skillsRequired: string[];
+};
+
+type Roadmap = {
+  adjustedTimelineWeeks: number;
+  phases: RoadmapPhase[];
+};
+
+type KeyFeature = {
+  feature: string;
+  description: string;
+  priority: 'P0' | 'P1' | 'P2';
+  complexity: 'Low' | 'Medium' | 'High';
+  estimatedDays: number;
 };
 
 export const user = pgTable("user", {
@@ -101,41 +140,27 @@ export const projects = pgTable('projects', {
   description: text('description').notNull(),
   problemStatement: text('problem_statement').notNull(),
   isPublic: boolean('is_public').default(true),
-  expiresAt: timestamp('expires_at'),  // Project Details
+  expiresAt: timestamp('expires_at'),
+  
+  // Project Details
   targetUsers: integer('target_users'),
   teamSize: integer('team_size'),
   timelineWeeks: integer('timeline_weeks'),
   budgetRange: varchar('budget_range', { length: 50 }),
 
-  // AI Generated Content
-  techStack: jsonb('tech_stack').$type<{
-    frontend?: string[];
-    backend?: string[];
-    database?: string[];
-    devops?: string[];
-  }>(),
+  // AI Generated Content - Updated to match AI response
+  techStack: jsonb('tech_stack').$type<TechStack>(),
 
   databaseSchema: jsonb('database_schema').$type<{
-    tables?: DatabaseTable[];
-    relationships?: DatabaseRelationship[];
+    tables: DatabaseTable[];
+    relationships: DatabaseRelationship[];
   }>(),
 
-  risks: jsonb('risks').$type<Array<{
-    title: string;
-    description: string;
-    severity: string;
-    mitigation: string;
-  }>>(),
+  risks: jsonb('risks').$type<Risk[]>(),
 
-  roadmap: jsonb('roadmap').$type<{
-    phases?: Array<{
-      name: string;
-      duration: string;
-      tasks: string[];
-    }>;
-  }>(),
+  roadmap: jsonb('roadmap').$type<Roadmap>(),
 
-  keyFeatures: jsonb('key_features').$type<string[]>(),
+  keyFeatures: jsonb('key_features').$type<KeyFeature[]>(),
 
   // Metadata
   viewCount: integer('view_count').default(0),
@@ -146,8 +171,7 @@ export const projects = pgTable('projects', {
   userProjectsIdx: index('idx_user_projects').on(table.userId),
   publicProjectsIdx: index('idx_public_projects').on(table.isPublic, table.createdAt),
   slugIdx: index('idx_slug').on(table.slug),
-  expiresAtIdx: index('idx_expires_at').on(table.expiresAt), // For cleanup queries
-
+  expiresAtIdx: index('idx_expires_at').on(table.expiresAt),
 }));
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -177,6 +201,7 @@ export const projectRelations = relations(projects, ({ one }) => ({
   }),
 }));
 
-
-
 export type Project = InferSelectModel<typeof projects>;
+
+// Export types for use in other files
+export type { TechStack, Risk, Roadmap, KeyFeature, DatabaseTable, DatabaseRelationship };

@@ -82,7 +82,7 @@ function ProfileDropdown({ user }: {
 
                 {/* VENDOR VIEW: Show Dashboard */}
                 <DropdownMenuItem asChild className="cursor-pointer py-2.5 ">
-                    <Link href="/p" className="flex items-center">
+                    <Link href="/my/p" className="flex items-center">
                         <IconCapProjecting className="mr-3 h-4 w-4" />
                         <span>My Projects</span>
                     </Link>
