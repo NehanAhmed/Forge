@@ -119,61 +119,101 @@ export interface AIRequest {
 }
 
 // Enhanced type guard with detailed validation
-export function isValidAIProjectPlanResponse(data: any): data is AIProjectPlanResponse {
+export function isValidAIProjectPlanResponse(
+  data: unknown
+): data is AIProjectPlanResponse {
   try {
+    if (!data || typeof data !== "object") return false;
+    const d = data as Record<string, unknown>;
+
     // Metadata validation
-    if (!data.metadata || typeof data.metadata !== 'object') return false;
-    if (typeof data.metadata.confidenceScore !== 'number' || 
-        data.metadata.confidenceScore < 0 || 
-        data.metadata.confidenceScore > 100) return false;
-    if (!['basic', 'detailed', 'comprehensive'].includes(data.metadata.analysisDepth)) return false;
-    if (typeof data.metadata.generatedAt !== 'string') return false;
-    if (!Array.isArray(data.metadata.adjustmentsMade)) return false;
+    if (!d.metadata || typeof d.metadata !== "object") return false;
+    const metadata = d.metadata as Record<string, unknown>;
+    if (
+      typeof metadata.confidenceScore !== "number" ||
+      metadata.confidenceScore < 0 ||
+      metadata.confidenceScore > 100
+    )
+      return false;
+    if (
+      typeof metadata.analysisDepth !== "string" ||
+      !["basic", "detailed", "comprehensive"].includes(metadata.analysisDepth)
+    )
+      return false;
+    if (typeof metadata.generatedAt !== "string") return false;
+    if (!Array.isArray(metadata.adjustmentsMade)) return false;
 
     // Tech Stack validation
-    if (!data.techStack || typeof data.techStack !== 'object') return false;
-    if (typeof data.techStack.rationale !== 'string') return false;
+    if (!d.techStack || typeof d.techStack !== "object") return false;
+    const techStack = d.techStack as Record<string, unknown>;
+    if (typeof techStack.rationale !== "string") return false;
 
     // Database Schema validation
-    if (!data.databaseSchema || typeof data.databaseSchema !== 'object') return false;
-    if (!Array.isArray(data.databaseSchema.tables)) return false;
-    if (!Array.isArray(data.databaseSchema.relationships)) return false;
+    if (!d.databaseSchema || typeof d.databaseSchema !== "object") return false;
+    const databaseSchema = d.databaseSchema as Record<string, unknown>;
+    if (!Array.isArray(databaseSchema.tables)) return false;
+    if (!Array.isArray(databaseSchema.relationships)) return false;
 
     // Validate tables structure
-    for (const table of data.databaseSchema.tables) {
-      if (!table.name || !Array.isArray(table.columns)) return false;
-      for (const column of table.columns) {
-        if (!column.name || !column.type || typeof column.nullable !== 'boolean') return false;
+    for (const table of databaseSchema.tables) {
+      if (!table || typeof table !== "object") return false;
+      const t = table as Record<string, unknown>;
+      if (!t.name || !Array.isArray(t.columns)) return false;
+      for (const column of t.columns) {
+        if (!column || typeof column !== "object") return false;
+        const c = column as Record<string, unknown>;
+        if (!c.name || !c.type || typeof c.nullable !== "boolean") return false;
       }
     }
 
     // Risks validation
-    if (!Array.isArray(data.risks) || data.risks.length === 0) return false;
-    for (const risk of data.risks) {
-      if (!risk.title || !risk.description || !risk.severity || !risk.mitigation || !risk.category) return false;
+    if (!Array.isArray(d.risks) || d.risks.length === 0) return false;
+    for (const risk of d.risks) {
+      if (!risk || typeof risk !== "object") return false;
+      const r = risk as Record<string, unknown>;
+      if (!r.title || !r.description || !r.severity || !r.mitigation || !r.category)
+        return false;
     }
 
     // Roadmap validation
-    if (!data.roadmap || typeof data.roadmap !== 'object') return false;
-    if (typeof data.roadmap.adjustedTimelineWeeks !== 'number') return false;
-    if (!Array.isArray(data.roadmap.phases) || data.roadmap.phases.length === 0) return false;
-    for (const phase of data.roadmap.phases) {
-      if (!phase.name || !phase.duration || !Array.isArray(phase.tasks) || 
-          !Array.isArray(phase.deliverables) || !Array.isArray(phase.skillsRequired)) return false;
+    if (!d.roadmap || typeof d.roadmap !== "object") return false;
+    const roadmap = d.roadmap as Record<string, unknown>;
+    if (typeof roadmap.adjustedTimelineWeeks !== "number") return false;
+    if (!Array.isArray(roadmap.phases) || roadmap.phases.length === 0) return false;
+    for (const phase of roadmap.phases) {
+      if (!phase || typeof phase !== "object") return false;
+      const p = phase as Record<string, unknown>;
+      if (
+        !p.name ||
+        !p.duration ||
+        !Array.isArray(p.tasks) ||
+        !Array.isArray(p.deliverables) ||
+        !Array.isArray(p.skillsRequired)
+      )
+        return false;
     }
 
     // Key Features validation
-    if (!Array.isArray(data.keyFeatures) || data.keyFeatures.length === 0) return false;
-    for (const feature of data.keyFeatures) {
-      if (!feature.feature || !feature.description || !feature.priority || 
-          !feature.complexity || typeof feature.estimatedDays !== 'number') return false;
+    if (!Array.isArray(d.keyFeatures) || d.keyFeatures.length === 0) return false;
+    for (const feature of d.keyFeatures) {
+      if (!feature || typeof feature !== "object") return false;
+      const f = feature as Record<string, unknown>;
+      if (
+        !f.feature ||
+        !f.description ||
+        !f.priority ||
+        !f.complexity ||
+        typeof f.estimatedDays !== "number"
+      )
+        return false;
     }
 
     // Executive Summary validation
-    if (typeof data.executiveSummary !== 'string' || data.executiveSummary.length === 0) return false;
+    if (typeof d.executiveSummary !== "string" || d.executiveSummary.length === 0)
+      return false;
 
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

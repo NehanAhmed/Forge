@@ -17,7 +17,7 @@ const ProjectsGrid = ({ projects }: { projects: Project[] }) => {
       ) : (
         <>
           {projects.map((project) => (
-            <div className='w-full grid grid-cols-2 '>
+            <div key={project.id} className='w-full grid grid-cols-1 '>
               <ProjectCard data={project} />
             </div>
           ))}
