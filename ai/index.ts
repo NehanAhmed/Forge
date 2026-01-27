@@ -7,16 +7,12 @@ const generateAiResponse = async (aiInputData: AIRequest): Promise<AIProjectPlan
     try {
         // Validate environment variables
         const modelName = process.env.OPENROUTER_AI_MODEL;
-        const apiKey = process.env.OPENROUTER_API_KEY;
         
         if (!modelName) {
             throw new Error('OPENROUTER_AI_MODEL environment variable is not set');
         }
         
-        if (!apiKey) {
-            throw new Error('OPENROUTER_API_KEY environment variable is not set');
-        }
-
+    
         
         const response = await generateText({
             model: openrouter.completion(modelName),
