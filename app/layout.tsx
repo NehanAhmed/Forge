@@ -22,6 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en" className={hanken.variable} >
+      <head>
+        <meta name="google-site-verification" content="aH5TsPkodTITeW3eq8pwVvahhPx0T_r-o369HejehVA" />
+      </head>
       <body
         className={`${hanken.variable} ${space_grotesk.variable} antialiased`}
 
@@ -32,7 +35,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster richColors position="top-right" closeButton expand  />
+          <Toaster richColors position="top-right" closeButton expand />
           {children}
 
         </ThemeProvider>
