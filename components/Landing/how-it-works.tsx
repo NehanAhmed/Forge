@@ -9,7 +9,7 @@ export function HowItWorks() {
             content: (
                 <div>
                     <p className="mb-4 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
-                        Tell us about your project idea. What problem are you solving? Who's your target audience? What's your timeline and budget?
+                        Tell us about your project idea. What problem are you solving? Who&apos;s your target audience? What&apos;s your timeline and budget?
                     </p>
                     <p className="mb-8 text-xs font-normal text-neutral-800 md:text-sm dark:text-neutral-200">
                         The more specific you are, the better our AI can tailor recommendations to your needs.

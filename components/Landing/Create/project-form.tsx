@@ -113,7 +113,7 @@ export function ProjectForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const form = useForm<ProjectFormInput, any, ProjectFormValues>({
+  const form = useForm<ProjectFormInput, unknown, ProjectFormValues>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
       title: "",

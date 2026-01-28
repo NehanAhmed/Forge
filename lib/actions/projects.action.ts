@@ -121,10 +121,13 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
     let lastError: Error | null = null;
 
     try {
-        // Get authenticated user
-        const session = await auth.api.getSession({
-            headers: await headers()
-        });
+        // Auth is optional for project creation (guest projects are allowed)
+        let session: Awaited<ReturnType<typeof auth.api.getSession>> | null = null;
+        try {
+            session = await auth.api.getSession({ headers: await headers() });
+        } catch {
+            session = null;
+        }
 
         const {
             title,
@@ -138,6 +141,7 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
         } = data;
 
         const userId = session?.session ? session.session.userId : null;
+        const expiresAt = userId ? null : new Date(Date.now() + 24 * 60 * 60 * 1000);
 
         console.log('🎯 Generating AI plan...');
 
@@ -178,6 +182,7 @@ export async function createProject({ data }: { data: CreateProjectInput }) {
                         isPublic,
                         slug,
                         userId,
+                        expiresAt,
                         viewCount: 0,
                         forkCount: 0,
                         // AI-generated fields
@@ -333,5 +338,95 @@ export async function incrementViewCount(projectId: string) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error("Error incrementing view count:", errorMessage);
         throw new Error(`Failed to increment view count: ${errorMessage}`);
+    }
+}
+
+/**
+ * Forks a project (creates a copy for the authenticated user) and increments fork count on the original.
+ * Returns the newly created project.
+ */
+export async function forkProject(projectId: string) {
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        if (!session?.session) {
+            throw new Error("Unauthorized: You must be logged in to fork a project");
+        }
+
+        const userId = session.session.userId;
+
+        const [original] = await db
+            .select()
+            .from(projects)
+            .where(eq(projects.id, projectId))
+            .limit(1);
+
+        if (!original) {
+            throw new Error("Project not found");
+        }
+
+        const forkSlug = await generateUniqueSlug(`${original.title} fork`);
+
+        // Transaction: increment fork count and create forked project
+        const forked = await db.transaction(async (tx) => {
+            await tx
+                .update(projects)
+                .set({
+                    forkCount: sql`${projects.forkCount} + 1`,
+                    updatedAt: new Date(),
+                })
+                .where(eq(projects.id, projectId));
+
+            const [newProject] = await tx
+                .insert(projects)
+                .values({
+                    // ownership / visibility
+                    userId,
+                    isPublic: false,
+
+                    // slug
+                    slug: forkSlug,
+
+                    // base info
+                    title: original.title,
+                    description: original.description,
+                    problemStatement: original.problemStatement,
+                    expiresAt: null,
+
+                    // details
+                    targetUsers: original.targetUsers,
+                    teamSize: original.teamSize,
+                    timelineWeeks: original.timelineWeeks,
+                    budgetRange: original.budgetRange,
+
+                    // AI fields
+                    techStack: original.techStack,
+                    databaseSchema: original.databaseSchema,
+                    risks: original.risks,
+                    roadmap: original.roadmap,
+                    keyFeatures: original.keyFeatures,
+
+                    // metadata
+                    viewCount: 0,
+                    forkCount: 0,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                })
+                .returning();
+
+            if (!newProject) {
+                throw new Error("Failed to create fork");
+            }
+
+            return newProject;
+        });
+
+        revalidatePath("/p");
+        revalidatePath(`/p/${forked.slug}`);
+
+        return forked;
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error("Error forking project:", errorMessage);
+        throw new Error(`Failed to fork project: ${errorMessage}`);
     }
 }
