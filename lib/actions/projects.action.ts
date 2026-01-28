@@ -390,7 +390,7 @@ export async function forkProject(projectId: string) {
                     title: original.title,
                     description: original.description,
                     problemStatement: original.problemStatement,
-                    expiresAt: original.expiresAt,
+                    expiresAt: null,
 
                     // details
                     targetUsers: original.targetUsers,
